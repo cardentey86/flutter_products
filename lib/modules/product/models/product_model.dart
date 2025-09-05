@@ -2,6 +2,7 @@ class ProductModel {
   String id;
   String name;
   String avatar;
+  bool? approved;
 
   ProductModel({
     required this.id,

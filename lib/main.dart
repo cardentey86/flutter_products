@@ -43,7 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
             bottom: const TabBar(tabs: [
               Tab(icon: Icon(Icons.production_quantity_limits, color: Colors.white,)),
               Tab(icon: Icon(Icons.rate_review, color: Colors.white,)),
-            ]),
+            ],
+            indicatorColor: Colors.white,),
             backgroundColor: Theme.of(context).colorScheme.primary,
             title: Text(widget.title, style: TextStyle(color: Colors.white),),
           ),

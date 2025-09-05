@@ -33,9 +33,9 @@ class ProductGridWidget extends StatelessWidget {
               final product = products[index];
               return ListTile(
                 key: Key(product.id),
-                  title: Text(product.name),
-                  leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar)
-                ),
+                title: Text(product.name),
+                leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar),),
+                trailing: Checkbox(value: false, onChanged: null),
               );
             },
           ),
