@@ -13,7 +13,7 @@ class ProductModel {
     return ProductModel(
       id: json['id'],
       name: json['name'],
-      avatar: json['avatar'],
+      avatar: json['avatar']
     );
   }
 

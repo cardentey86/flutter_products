@@ -36,19 +36,29 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Text(widget.title),
-        ),
-        body: SafeArea(
-          child: const ProductScreen(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: null,
-          tooltip: 'Increment',
-          backgroundColor: Colors.blue,
-          child: const Icon(Icons.add, color: Colors.white,),
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar(tabs: [
+              Tab(icon: Icon(Icons.production_quantity_limits, color: Colors.white,)),
+              Tab(icon: Icon(Icons.rate_review, color: Colors.white,)),
+            ]),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            title: Text(widget.title, style: TextStyle(color: Colors.white),),
+          ),
+          body: TabBarView(
+              children: [
+                const ProductScreen(),
+                const ProductScreen(),
+              ]
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: null,
+            tooltip: 'Increment',
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.add, color: Colors.white,),
+          ),
         ),
       ),
     );

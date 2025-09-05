@@ -13,13 +13,6 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
 
-  List<ProductModel> products = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<List<ProductModel>> fetchProducts() async {
     final List<ProductModel> data = await ProductController.getProducts();
     return data;
@@ -34,7 +27,7 @@ class _ProductScreenState extends State<ProductScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            return ProductGridWidget(products: products);
+            return ProductGridWidget(products: snapshot.data!);
           } else {
             return const Center(child: Text('No products found'));
           }
