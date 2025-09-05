@@ -1,6 +1,6 @@
 # productos
 
-A new Flutter project.
+A new Flutter project for educational purposes showing a list of products with basic CRUD options. 
 
 ## Getting Started
 
