@@ -9,6 +9,7 @@ class ProductGridWidget extends StatelessWidget {
     required this.products,
   });
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -35,12 +36,18 @@ class ProductGridWidget extends StatelessWidget {
                 key: Key(product.id),
                 title: Text(product.name),
                 leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar),),
-                trailing: Checkbox(value: false, onChanged: null),
+                trailing: Checkbox(value: product.approved, onChanged: (bool? value){
+                  aprove(value);
+                }),
               );
             },
           ),
         ),
       ],
     );
+  }
+
+  void aprove(bool? value){
+    // implemenet
   }
 }
