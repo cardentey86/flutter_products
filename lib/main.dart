@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productos/modules/product/screens/product_review_screen.dart';
 
 import 'modules/product/screens/product_screen.dart';
 
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
           body: TabBarView(
               children: [
                 const ProductScreen(),
-                const ProductScreen(),
+                const ProductReviewScreen(),
               ]
           ),
           floatingActionButton: FloatingActionButton(
