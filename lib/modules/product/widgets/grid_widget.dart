@@ -5,9 +5,9 @@ class ProductGridWidget extends StatelessWidget {
   final List<ProductModel> products;
 
   const ProductGridWidget({
-    Key? key,
+    super.key,
     required this.products,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class ProductGridWidget extends StatelessWidget {
             children: const [
               Icon(Icons.list, size: 24,),
               SizedBox(width: 8,),
-              const Text('Products', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              Text('Products', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
             ],
           ), 
         ),

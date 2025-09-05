@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: null,
-            tooltip: 'Increment',
+            tooltip: 'Add product',
             backgroundColor: Colors.blue,
             child: const Icon(Icons.add, color: Colors.white,),
           ),
