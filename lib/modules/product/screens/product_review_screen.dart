@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:productos/modules/product/infrastructure/product_sqlite_controller.dart';
+
+import '../models/product_model.dart';
+import '../widgets/grid_widget.dart';
 
 class ProductReviewScreen extends StatefulWidget {
   const ProductReviewScreen({super.key});
@@ -12,7 +16,16 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('Reviewed')
+        FutureBuilder<List<ProductModel>>(
+          future: ProductSqliteController().getProducts(),
+          builder: (context, AsyncSnapshot<List<ProductModel>> snapshot) {
+            if (snapshot.hasData) {
+              return ProductGridWidget(products: snapshot.data!);
+            } else {
+              return const Center(child: Text('No products found'));
+            }
+          },
+        )
       ],
     );
   }

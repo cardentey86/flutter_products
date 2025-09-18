@@ -8,6 +8,7 @@ class ProductModel {
     required this.id,
     required this.name,
     required this.avatar,
+    this.approved = false
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -18,11 +19,29 @@ class ProductModel {
     );
   }
 
+  factory ProductModel.fromObject(Map<String, Object?> object) {
+    return ProductModel(
+      id: object['id'] as String,
+      name: object['name'] as String,
+      avatar: object['avatar'] as String,
+      approved: (object['approved'] as int) == 1,
+    );
+  }
+
   Map<String,dynamic> toJson(ProductModel product) {
     return {
       'id': product.id,
       'name': product.name,
       'avatar': product.avatar,
+    };
+  }
+
+  Map<String, Object?> toObject() {
+    return {
+      'id': id,
+      'name': name,
+      'avatar': avatar,
+      'approved': approved! ? 1 : 0,
     };
   }
 }

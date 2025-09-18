@@ -36,7 +36,7 @@ class ProductGridWidget extends StatelessWidget {
                 key: Key(product.id),
                 title: Text(product.name),
                 leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar),),
-                trailing: Checkbox(value: product.approved, onChanged: (bool? value){
+                trailing: Checkbox(value: false, onChanged: (bool? value){
                   aprove(value);
                 }),
               );
