@@ -1,11 +1,16 @@
 import 'package:productos/modules/product/models/product_model.dart';
 
 import '../../data/database.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ProductSqliteController {
-  Future<void> insertProduct(ProductModel product) async {
+  Future<int> insertProduct(ProductModel product) async {
     final db = await AppDatabase.initDB();
-    await db.insert("products", {"name": product.name, "avatar": product.avatar, "approved": product.approved! ? 1 : 0 });
+    return await db.insert(
+      "products",
+      product.toObject(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<ProductModel>> getProducts() async {
@@ -14,18 +19,33 @@ class ProductSqliteController {
     return result.map((row) => ProductModel.fromObject(row)).toList();
   }
 
-  Future<void> updateProduct(int id, ProductModel product) async {
+  Future<int> updateProduct(int id, ProductModel product) async {
     final db = await AppDatabase.initDB();
-    await db.update(
+    return await db.update(
       "products",
-      {"name": product.name, "avatar": product.avatar, "approved" : product.approved! ? 1 : 0},
+      product.toObject(),
       where: "id = ?",
-      whereArgs: [id],
+      whereArgs: [product.id],
     );
   }
-
-  Future<void> deleteProduct(int id) async {
+  Future<ProductModel?> getProductById(int id) async {
     final db = await AppDatabase.initDB();
-    await db.delete("products", where: "id = ?", whereArgs: [id]);
+    final result = await db.query(
+      "products",
+      where: "id = ?",
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return ProductModel.fromObject(result.first);
+    }
+    return null;
+  }
+
+
+  Future<bool> deleteProduct(int id) async {
+    final db = await AppDatabase.initDB();
+    return await db.delete("products", where: "id = ?", whereArgs: [id]) > 0;
   }
 }
