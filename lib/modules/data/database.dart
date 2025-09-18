@@ -12,7 +12,7 @@ class AppDatabase {
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT NOT NULL PRIMARY KEY,
             name TEXT NOT NULL,
             avatar TEXT NOT NULL,
             approved INTEGER NOT NULL DEFAULT 0

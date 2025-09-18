@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productos/modules/product/infrastructure/product_sqlite_controller.dart';
 import 'package:productos/modules/product/models/product_model.dart';
 
 class ProductGridWidget extends StatelessWidget {
@@ -8,7 +9,6 @@ class ProductGridWidget extends StatelessWidget {
     super.key,
     required this.products,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ProductGridWidget extends StatelessWidget {
                 title: Text(product.name),
                 leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar),),
                 trailing: Checkbox(value: false, onChanged: (bool? value){
-                  aprove(value);
+                  aprove(product, value);
                 }),
               );
             },
@@ -47,7 +47,8 @@ class ProductGridWidget extends StatelessWidget {
     );
   }
 
-  void aprove(bool? value){
-    // implemenet
+  Future<void> aprove(ProductModel product, bool? value) async {
+    product.approved = value;
+    await ProductSqliteController().insertProduct(product);
   }
 }
