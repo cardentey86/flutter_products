@@ -42,7 +42,7 @@ class _ProductScreenState extends State<ProductScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            return ProductGridWidget(products: snapshot.data!, showCheckBox: true, scaffoldContext: context, localProducts: localProducts, showBtnToEmptyLocalProducts: false,);
+            return GridWidget(title: 'Products from API', products: snapshot.data!, showCheckBox: true, scaffoldContext: context, localProducts: localProducts, showBtnToEmptyLocalProducts: false,);
           } else {
             return const Center(child: Text('No products found'));
           }

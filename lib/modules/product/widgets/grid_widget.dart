@@ -4,15 +4,16 @@ import 'package:productos/modules/product/models/product_model.dart';
 import 'package:productos/modules/product/widgets/dialog/conformationDialog_widget.dart';
 import 'package:productos/modules/product/widgets/dialog/dialog_type.dart';
 
-class ProductGridWidget extends StatefulWidget {
+class GridWidget extends StatefulWidget {
   final List<ProductModel> products;
   final List<ProductModel>? localProducts;
   final bool showCheckBox;
   final bool showBtnToEmptyLocalProducts;
   final BuildContext scaffoldContext;
   final int? itemsPerPage;
+  final String title;
 
-  const ProductGridWidget({
+  const GridWidget({
     super.key,
     required this.products,
     this.localProducts,
@@ -20,13 +21,14 @@ class ProductGridWidget extends StatefulWidget {
     required this.showCheckBox,
     required this.scaffoldContext,
     required this.showBtnToEmptyLocalProducts,
+    required this.title
   });
 
   @override
-  State<ProductGridWidget> createState() => _ProductGridWidgetState();
+  State<GridWidget> createState() => _ProductGridWidgetState();
 }
 
-class _ProductGridWidgetState extends State<ProductGridWidget> {
+class _ProductGridWidgetState extends State<GridWidget> {
   late List<ProductModel> localProducts;
   int currentPage = 0;
   int itemsPerPage = 10;
@@ -53,15 +55,14 @@ class _ProductGridWidgetState extends State<ProductGridWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header con icono y botón eliminar
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               const Icon(Icons.list, size: 24),
               const SizedBox(width: 8),
-              const Text(
-                'Products',
+              Text(
+                widget.title,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
