@@ -1,6 +1,6 @@
-# productos
+# Products
 
-A new Flutter project for educational purposes showing a list of products with basic CRUD options. 
+Technical test to show products, people are shown in the API 
 
 ## Getting Started
 
