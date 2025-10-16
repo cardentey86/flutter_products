@@ -101,7 +101,7 @@ class _ProductGridWidgetState extends State<GridWidget> {
           ),
         ),
 
-        // ListView con paginación
+        // Paginated listview
         Expanded(
           child: ListView.builder(
             itemCount: currentItems.length,
@@ -136,7 +136,7 @@ class _ProductGridWidgetState extends State<GridWidget> {
           ),
         ),
 
-        // Controles de paginación
+        // Pagination controls
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
