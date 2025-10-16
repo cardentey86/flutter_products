@@ -10,11 +10,13 @@ class ProductGridWidget extends StatefulWidget {
   final bool showCheckBox;
   final bool showBtnToEmptyLocalProducts;
   final BuildContext scaffoldContext;
+  final int? itemsPerPage;
 
   const ProductGridWidget({
     super.key,
     required this.products,
     this.localProducts,
+    this.itemsPerPage,
     required this.showCheckBox,
     required this.scaffoldContext,
     required this.showBtnToEmptyLocalProducts,
@@ -26,114 +28,148 @@ class ProductGridWidget extends StatefulWidget {
 
 class _ProductGridWidgetState extends State<ProductGridWidget> {
   late List<ProductModel> localProducts;
+  int currentPage = 0;
+  int itemsPerPage = 10;
 
   @override
   void initState() {
     super.initState();
     localProducts = widget.localProducts ?? [];
+    itemsPerPage = widget.itemsPerPage ?? 10;
   }
 
   @override
   Widget build(BuildContext context) {
+    final totalPages = (widget.products.length / itemsPerPage).ceil();
+
+    final startIndex = currentPage * itemsPerPage;
+    final endIndex =
+    (startIndex + itemsPerPage) > widget.products.length
+        ? widget.products.length
+        : startIndex + itemsPerPage;
+
+    final currentItems = widget.products.sublist(startIndex, endIndex);
+
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header con icono y botón eliminar
         Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(Icons.list, size: 24,),
-              SizedBox(width: 8,),
-              Text('Products', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-              Spacer(),
+              const Icon(Icons.list, size: 24),
+              const SizedBox(width: 8),
+              const Text(
+                'Products',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
               if (widget.showBtnToEmptyLocalProducts &&
-                  widget.localProducts != null &&
-                  widget.localProducts!.isNotEmpty)
+                  localProducts.isNotEmpty)
                 IconButton(
+                  icon: const Icon(Icons.delete, size: 24, color: Colors.red),
                   onPressed: () async {
                     await ConfirmationDialog.show(
                       context,
                       title: 'Delete all products?',
                       content: 'This action cannot be undone.',
-                      onConfirm: () {
-                        emptyLocalProducts();
+                      type: DialogType.Eliminacion,
+                      onConfirm: () async {
+                        await emptyLocalProducts();
+                        setState(() {
+                          localProducts.clear();
+                          for (var p in widget.products) {
+                            p.approved = false;
+                          }
+                        });
                         showSnackBar(context, 'All products deleted');
-                        clearLocalProducts();
-                        },
-                      type: DialogType.Eliminacion);
-                    },
-                  icon: const Icon(Icons.delete, size: 24, color: Colors.red),
+                      },
+                    );
+                  },
                 ),
             ],
           ),
         ),
+
+        // ListView con paginación
         Expanded(
           child: ListView.builder(
-            itemCount: widget.products.length,
+            itemCount: currentItems.length,
             itemBuilder: (context, index) {
-              final product = widget.products[index];
-              final isChecked = widget.localProducts!.any((p) => p.id == product.id);
+              final product = currentItems[index];
+              final isChecked =
+              localProducts.any((p) => p.id == product.id);
+
               return ListTile(
                 key: Key(product.id),
                 title: Text(product.name),
-                leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar),),
-                trailing: widget.showCheckBox  ? Checkbox(value: isChecked,
-                    onChanged: (bool? value) async {
-                      if (!isChecked && value == true) {
-                        await aprove(widget.scaffoldContext, product, value);
-
-                        setState(() {
-                          localProducts.add(product);
-                        });
-                      }
-                }):null,
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(product.avatar),
+                ),
+                trailing: widget.showCheckBox
+                    ? Checkbox(
+                  value: isChecked,
+                  onChanged: (bool? value) async {
+                    // Solo permitir marcar si no está en local
+                    if (!isChecked && value == true) {
+                      await aprove(
+                          widget.scaffoldContext, product, value);
+                      setState(() {
+                        localProducts.add(product);
+                      });
+                    }
+                  },
+                )
+                    : null,
               );
             },
           ),
+        ),
+
+        // Controles de paginación
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: currentPage > 0
+                  ? () {
+                setState(() {
+                  currentPage--;
+                });
+              }
+                  : null,
+            ),
+            Text('${currentPage + 1} / $totalPages'),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward),
+              onPressed: currentPage < totalPages - 1
+                  ? () {
+                setState(() {
+                  currentPage++;
+                });
+              }
+                  : null,
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Future<void> aprove(BuildContext context, ProductModel product, bool? value) async {
+  Future<void> aprove(
+      BuildContext context, ProductModel product, bool? value) async {
     product.approved = value;
     final result = await ProductSqliteController().insertProduct(product);
-    if (result)
-    {
+    if (result) {
       showSnackBar(context, 'Product added to local database');
     }
-
   }
 
-  bool checkLocalProduct(String id, List<ProductModel> localProducts)
-  {
-    if (localProducts.isNotEmpty)
-      {
-        return localProducts.any((prod)=> prod.id == id);
-      }
-    return false;
-  }
-
-  void clearLocalProducts(){
-    setState(() {
-      if (widget.localProducts != null) {
-        widget.localProducts!.clear();
-      }
-      for (var p in widget.products) {
-        p.approved = false;
-      }
-    });
-  }
-
-  void showSnackBar(BuildContext context, String message)
-  {
+  void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ),
+      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
   }
 

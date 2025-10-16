@@ -12,7 +12,7 @@ class ProductController {
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
-      return jsonData.map((json) => ProductModel.fromJson(json)).toList().take(10).toList();
+      return jsonData.map((json) => ProductModel.fromJson(json)).toList().toList();
     } else {
       throw Exception('Failed to load products');
     }
