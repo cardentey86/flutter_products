@@ -57,39 +57,47 @@ class _ProductGridWidgetState extends State<GridWidget> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const Icon(Icons.list, size: 24),
-              const SizedBox(width: 8),
-              Text(
-                widget.title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              if (widget.showBtnToEmptyLocalProducts &&
-                  localProducts.isNotEmpty)
-                IconButton(
-                  icon: const Icon(Icons.delete, size: 24, color: Colors.red),
-                  onPressed: () async {
-                    await ConfirmationDialog.show(
-                      context,
-                      title: 'Delete all products?',
-                      content: 'This action cannot be undone.',
-                      type: DialogType.Eliminacion,
-                      onConfirm: () async {
-                        await emptyLocalProducts();
-                        setState(() {
-                          localProducts.clear();
-                          for (var p in widget.products) {
-                            p.approved = false;
-                          }
-                        });
-                        showSnackBar(context, 'All products deleted');
+          child: Column(
+            children:[
+              Row(
+                children: [
+                  const Icon(Icons.list, size: 24),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  if (widget.showBtnToEmptyLocalProducts &&
+                      localProducts.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.delete, size: 24, color: Colors.red),
+                      onPressed: () async {
+                        await ConfirmationDialog.show(
+                          context,
+                          title: 'Delete all products?',
+                          content: 'This action cannot be undone.',
+                          type: DialogType.Eliminacion,
+                          onConfirm: () async {
+                            await emptyLocalProducts();
+                            setState(() {
+                              localProducts.clear();
+                              for (var p in widget.products) {
+                                p.approved = false;
+                              }
+                            });
+                            showSnackBar(context, 'All products deleted');
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
-            ],
+                    ),
+                ],
+              ),
+              Row(children: [
+                Spacer(),
+                Text('Showing $itemsPerPage items per page')
+              ],)
+            ] 
           ),
         ),
 
