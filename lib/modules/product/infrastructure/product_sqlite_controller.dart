@@ -4,7 +4,7 @@ import '../../data/database.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProductSqliteController {
-  Future<int> insertProduct(ProductModel product) async {
+  Future<bool> insertProduct(ProductModel product) async {
     final db = await AppDatabase.initDB();
     final result = await db.insert(
       "products",
@@ -12,7 +12,7 @@ class ProductSqliteController {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    return result;
+    return result > 0;
   }
 
   Future<List<ProductModel>> getProducts() async {
@@ -49,5 +49,10 @@ class ProductSqliteController {
   Future<bool> deleteProduct(int id) async {
     final db = await AppDatabase.initDB();
     return await db.delete("products", where: "id = ?", whereArgs: [id]) > 0;
+  }
+
+  Future<bool> deleteAllProducts() async {
+    final db = await AppDatabase.initDB();
+    return await db.delete("products") > 0;
   }
 }

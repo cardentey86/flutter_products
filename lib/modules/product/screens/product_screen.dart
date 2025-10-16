@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:productos/modules/product/infrastructure/product_controller.dart';
 import 'package:productos/modules/product/models/product_model.dart';
 
+import '../infrastructure/product_sqlite_controller.dart';
 import '../widgets/grid_widget.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -13,9 +14,23 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
 
+  List<ProductModel> localProducts = [];
+
+  @override void initState() {
+    super.initState();
+    loadLocalProducts();
+  }
+
   Future<List<ProductModel>> fetchProducts() async {
     final List<ProductModel> data = await ProductController.getProducts();
     return data;
+  }
+
+  Future<void> loadLocalProducts() async {
+    final result = await ProductSqliteController().getProducts();
+    setState(() {
+      localProducts = result;
+    });
   }
 
   @override
@@ -27,7 +42,7 @@ class _ProductScreenState extends State<ProductScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            return ProductGridWidget(products: snapshot.data!, showCheckBox: true);
+            return ProductGridWidget(products: snapshot.data!, showCheckBox: true, scaffoldContext: context, localProducts: localProducts, showBtnToEmptyLocalProducts: false,);
           } else {
             return const Center(child: Text('No products found'));
           }

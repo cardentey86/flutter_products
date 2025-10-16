@@ -21,7 +21,7 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
             future: ProductSqliteController().getProducts(),
             builder: (context, AsyncSnapshot<List<ProductModel>> snapshot) {
               if (snapshot.hasData) {
-                return ProductGridWidget(products: snapshot.data!, showCheckBox: false);
+                return ProductGridWidget(products: snapshot.data!, localProducts: snapshot.data, showCheckBox: false, scaffoldContext: context, showBtnToEmptyLocalProducts: true);
               } else {
                 return const Center(child: Text('No products found'));
               }
