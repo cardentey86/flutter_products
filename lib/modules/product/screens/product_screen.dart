@@ -27,7 +27,7 @@ class _ProductScreenState extends State<ProductScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            return ProductGridWidget(products: snapshot.data!);
+            return ProductGridWidget(products: snapshot.data!, showCheckBox: true);
           } else {
             return const Center(child: Text('No products found'));
           }

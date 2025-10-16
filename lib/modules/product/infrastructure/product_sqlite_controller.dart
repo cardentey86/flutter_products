@@ -6,11 +6,13 @@ import 'package:sqflite/sqflite.dart';
 class ProductSqliteController {
   Future<int> insertProduct(ProductModel product) async {
     final db = await AppDatabase.initDB();
-    return await db.insert(
+    final result = await db.insert(
       "products",
       product.toObject(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
+    return result;
   }
 
   Future<List<ProductModel>> getProducts() async {

@@ -16,15 +16,17 @@ class _ProductReviewScreenState extends State<ProductReviewScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FutureBuilder<List<ProductModel>>(
-          future: ProductSqliteController().getProducts(),
-          builder: (context, AsyncSnapshot<List<ProductModel>> snapshot) {
-            if (snapshot.hasData) {
-              return ProductGridWidget(products: snapshot.data!);
-            } else {
-              return const Center(child: Text('No products found'));
-            }
-          },
+        Expanded(
+          child: FutureBuilder<List<ProductModel>>(
+            future: ProductSqliteController().getProducts(),
+            builder: (context, AsyncSnapshot<List<ProductModel>> snapshot) {
+              if (snapshot.hasData) {
+                return ProductGridWidget(products: snapshot.data!, showCheckBox: false);
+              } else {
+                return const Center(child: Text('No products found'));
+              }
+            },
+          ),
         )
       ],
     );

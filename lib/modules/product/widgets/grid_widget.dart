@@ -4,10 +4,12 @@ import 'package:productos/modules/product/models/product_model.dart';
 
 class ProductGridWidget extends StatelessWidget {
   final List<ProductModel> products;
+  final bool showCheckBox;
 
   const ProductGridWidget({
     super.key,
     required this.products,
+    required this.showCheckBox
   });
 
   @override
@@ -36,9 +38,9 @@ class ProductGridWidget extends StatelessWidget {
                 key: Key(product.id),
                 title: Text(product.name),
                 leading: CircleAvatar(backgroundImage: NetworkImage(product.avatar),),
-                trailing: Checkbox(value: false, onChanged: (bool? value){
+                trailing: showCheckBox  ? Checkbox(value: false, onChanged: (bool? value){
                   aprove(product, value);
-                }),
+                }):null,
               );
             },
           ),
