@@ -46,9 +46,9 @@ class ProductSqliteController {
   }
 
 
-  Future<bool> deleteProduct(int id) async {
+  Future<bool> deleteProduct(String id) async {
     final db = await AppDatabase.initDB();
-    return await db.delete("products", where: "id = ?", whereArgs: [id]) > 0;
+    return await db.delete("products", where: "id = ?", whereArgs: [id]) != "";
   }
 
   Future<bool> deleteAllProducts() async {

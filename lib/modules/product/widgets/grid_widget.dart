@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:productos/modules/product/infrastructure/product_sqlite_controller.dart';
 import 'package:productos/modules/product/models/product_model.dart';
 import 'package:productos/modules/product/widgets/dialog/conformationDialog_widget.dart';
@@ -12,16 +13,19 @@ class GridWidget extends StatefulWidget {
   final BuildContext scaffoldContext;
   final int? itemsPerPage;
   final String title;
+  final bool? isLocale;
 
   const GridWidget({
     super.key,
     required this.products,
     this.localProducts,
     this.itemsPerPage,
+    this.isLocale = false,
     required this.showCheckBox,
     required this.scaffoldContext,
     required this.showBtnToEmptyLocalProducts,
-    required this.title
+    required this.title,
+
   });
 
   @override
@@ -110,7 +114,7 @@ class _ProductGridWidgetState extends State<GridWidget> {
               final isChecked =
               localProducts.any((p) => p.id == product.id);
 
-              return ListTile(
+              final listTile = ListTile(
                 key: Key(product.id),
                 title: Text(product.name),
                 leading: CircleAvatar(
@@ -132,7 +136,90 @@ class _ProductGridWidgetState extends State<GridWidget> {
                 )
                     : null,
               );
+              if(widget.isLocale == false){
+                return listTile;
+              } else {
+                return Slidable(
+                  key: ValueKey('slide_${product.id}'),
+                  startActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    extentRatio: 0.25,
+                    children: [
+                      SlidableAction(
+                        onPressed: (_) async {
+
+                          showSnackBar(context, 'Edit ${product.name}');
+                        },
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.green,
+                        icon: Icons.edit,
+                        label: 'Edit',
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ],
+                  ),
+                  endActionPane: ActionPane(
+                    motion: const DrawerMotion(), // puedes usar ScrollMotion para otro efecto
+                    extentRatio: 0.25,
+                    children: [
+                      SlidableAction(
+                        onPressed: (_) async {
+                          await ConfirmationDialog.show(
+                            context,
+                            title: 'Delete product?',
+                            content:
+                            'Are you sure you want to delete "${product.name}"?',
+                            type: DialogType.Eliminacion,
+                            onConfirm: () async {
+                              await deleteProduct(product);
+                              setState(() {
+                                localProducts.removeWhere((p) => p.id == product.id);
+                              });
+                              showSnackBar(context, 'Product deleted');
+                            },
+                          );
+                        },
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.red,
+                        icon: Icons.delete,
+                        label: 'Delete',
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ],
+                  ),
+                  child: listTile,
+                );
+
+                // return Dismissible(
+                //   key: Key('dismiss_${product.id}'),
+                //   direction: DismissDirection.endToStart,
+                //   child: listTile,
+                //   background: Container(
+                //     color: Colors.redAccent,
+                //     alignment: Alignment.centerRight,
+                //     padding: const EdgeInsets.symmetric(horizontal: 20),
+                //     child: const Icon(Icons.delete, color: Colors.white, size: 28),
+                //   ),
+                //   confirmDismiss: (direction) async {
+                //     await ConfirmationDialog.show(
+                //       context,
+                //       title: 'Delete product?',
+                //       content: 'Are you sure you want to delete "${product.name}"?',
+                //       type: DialogType.Eliminacion,
+                //         onConfirm: () async {
+                //           await deleteProduct(product);
+                //           setState(() {
+                //           localProducts.removeWhere((p) => p.id == product.id);
+                //         });
+                //       showSnackBar(context, 'Product deleted');
+                //     },
+                //   );
+                //   }
+                // );
+              }
+
             },
+
           ),
         ),
 
@@ -180,6 +267,10 @@ class _ProductGridWidgetState extends State<GridWidget> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
     );
+  }
+
+  Future<void> deleteProduct(ProductModel product) async {
+    await ProductSqliteController().deleteProduct(product.id);
   }
 
   Future<void> emptyLocalProducts() async {
