@@ -57,7 +57,6 @@ class ApiAdapter<T extends BaseModel<T>> {
     return response.statusCode == 200;
   }
 
-  // 🔹 DELETE
   Future<bool> delete(String id) async {
     final response = await http.delete(_buildUri(id));
     return response.statusCode == 200;

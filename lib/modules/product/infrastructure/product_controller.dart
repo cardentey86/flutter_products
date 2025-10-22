@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
 import 'package:productos/helpers/api_adapter.dart';
 import '../models/product_model.dart';
 

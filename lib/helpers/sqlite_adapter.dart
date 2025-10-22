@@ -11,7 +11,6 @@ class SqliteAdapter<T extends BaseModelSqlite<T>> {
     required this.model,
   });
 
-  // 🔹 Insertar un registro
   Future<bool> insert(T item) async {
     final db = await AppDatabase.initDB();
     final result = await db.insert(
@@ -22,14 +21,12 @@ class SqliteAdapter<T extends BaseModelSqlite<T>> {
     return result > 0;
   }
 
-  // 🔹 Obtener todos los registros
   Future<List<T>> getAll() async {
     final db = await AppDatabase.initDB();
     final result = await db.query(tableName);
     return result.map((row) => model.fromObject(row)).toList();
   }
 
-  // 🔹 Obtener un registro por ID
   Future<T?> getById(dynamic id) async {
     final db = await AppDatabase.initDB();
     final result = await db.query(
@@ -44,7 +41,6 @@ class SqliteAdapter<T extends BaseModelSqlite<T>> {
     return null;
   }
 
-  // 🔹 Actualizar un registro
   Future<int> update(dynamic id, T item) async {
     final db = await AppDatabase.initDB();
     return await db.update(
@@ -55,13 +51,11 @@ class SqliteAdapter<T extends BaseModelSqlite<T>> {
     );
   }
 
-  // 🔹 Eliminar un registro
   Future<bool> delete(dynamic id) async {
     final db = await AppDatabase.initDB();
     return await db.delete(tableName, where: 'id = ?', whereArgs: [id]) > 0;
   }
 
-  // 🔹 Eliminar todos los registros
   Future<bool> deleteAll() async {
     final db = await AppDatabase.initDB();
     return await db.delete(tableName) > 0;

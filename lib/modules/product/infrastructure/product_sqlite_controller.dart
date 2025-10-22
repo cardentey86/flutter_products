@@ -1,8 +1,4 @@
 import 'package:productos/modules/product/models/product_model.dart';
-
-import '../../../data/database.dart';
-import 'package:sqflite/sqflite.dart';
-
 import '../../../helpers/sqlite_adapter.dart';
 
 class ProductSqliteController {
