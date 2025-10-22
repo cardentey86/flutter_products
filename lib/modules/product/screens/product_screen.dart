@@ -22,7 +22,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Future<List<ProductModel>> fetchProducts() async {
-    final List<ProductModel> data = await ProductController.getProducts();
+    final List<ProductModel> data = await ProductController().getProducts();
     return data;
   }
 

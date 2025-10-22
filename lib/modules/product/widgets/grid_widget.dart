@@ -136,6 +136,16 @@ class _ProductGridWidgetState extends State<GridWidget> {
                 )
                     : null,
               );
+
+              final card = Card(
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 2,
+                child: listTile,
+              );
+
               if(widget.isLocale == false){
                 return listTile;
               } else {
@@ -187,7 +197,7 @@ class _ProductGridWidgetState extends State<GridWidget> {
                       ),
                     ],
                   ),
-                  child: listTile,
+                  child: card,
                 );
 
                 // return Dismissible(
